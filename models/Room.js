@@ -1,18 +1,37 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const roomSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  teachers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  code: { type: String, unique: true, required: true },
-  capacity: { type: Number, required: true },
-  scheduledExams: [{
-    exam: { type: mongoose.Schema.Types.ObjectId, ref: 'Exam' },
-    date: { type: Date, required: true },
-  }],
+  teachers: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      approved: { type: Boolean, default: false },
+    },
+  ],
+  students: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      status: {
+        type: String,
+        enum: ["approved", "pending"],
+        default: "approved",
+      },
+    },
+  ],
+  institute: { type: mongoose.Schema.Types.ObjectId, ref: "Institute" },
+  scheduledExams: [
+    {
+      exam: { type: mongoose.Schema.Types.ObjectId, ref: "Exam" },
+      date: { type: Date, required: true },
+    },
+  ],
   isAvailable: { type: Boolean, default: true },
+  created_at: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
-const Room = mongoose.model('Room', roomSchema);
+const Room = mongoose.model("Room", roomSchema);
 
 export default Room;

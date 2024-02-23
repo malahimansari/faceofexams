@@ -2,10 +2,14 @@ import { Router } from "express";
 import { check } from "express-validator";
 const institute_router = Router();
 
-// Controller
+// Controllers
 import instituteController from "../controllers/instituteController.js";
 
 // Middleware
+import authMiddleware from "../middlewares/authMiddleware.js";
+
+
+institute_router.use(authMiddleware);
 
 /**
  * @route POST /api/v1/institute/register
@@ -13,18 +17,21 @@ import instituteController from "../controllers/instituteController.js";
  * @access public
  */
 
-institute_router.post("/register", [
-  check("name", "Please enter institute name").not().isEmpty(),
-  check("email", "Please enter a valid email").isEmail(),
-  check(
-    "password",
-    "Please Enter a password with 6 or more characters"
-  ).isLength({ min: 6 }),
-  check("phone", "Please Enter a valid phone number").isLength({
-    min: 10,
-    max: 13,
-  }),
-], instituteController.register_institute);
-
+institute_router.post(
+  "/register",
+  [
+    check("name", "Please enter institute name").not().isEmpty(),
+    check("email", "Please enter a valid email").isEmail(),
+    check(
+      "password",
+      "Please Enter a password with 6 or more characters"
+    ).isLength({ min: 6 }),
+    check("phone", "Please Enter a valid phone number").isLength({
+      min: 10,
+      max: 13,
+    }),
+  ],
+  instituteController.register_institute
+);
 
 export default institute_router;

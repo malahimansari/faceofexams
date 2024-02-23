@@ -22,6 +22,7 @@ const institutionSchema = new mongoose.Schema({
     pricing: { type: Number },
     features: [{ type: String }],
   },
+  admins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
 });
 
