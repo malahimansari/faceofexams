@@ -20,6 +20,7 @@ const register_institute = async (req, res) => {
       email,
       password,
       phone,
+      admin: req.user.id,
     });
     const salt = await bcrypt.genSalt(10);
     institute.password = await bcrypt.hash(password, salt);
@@ -29,13 +30,13 @@ const register_institute = async (req, res) => {
     const payload = {
       institute: {
         id: institute.id,
-        role: institute.role,
+        user_id: req.user.id,
       },
     };
     jwt.sign(
       payload,
       process.env.JWTSECRET,
-      { expiresIn: 3600 },
+      { expiresIn: 3600000 },
       (err, token) => {
         if (err) throw err;
         return res.json({

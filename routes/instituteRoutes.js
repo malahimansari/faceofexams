@@ -34,4 +34,5 @@ institute_router.post(
   instituteController.register_institute
 );
 
+
 export default institute_router;

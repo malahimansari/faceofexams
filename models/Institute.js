@@ -6,7 +6,7 @@ const institutionSchema = new mongoose.Schema({
   password: { type: String, required: true },
   logoUrl: { type: String },
   phone: { type: String, required: true },
-  role: {
+  category: {
     type: String,
     enum: ["university", "college", "school"],
     required: true,
@@ -22,7 +22,13 @@ const institutionSchema = new mongoose.Schema({
     pricing: { type: Number },
     features: [{ type: String }],
   },
-  admins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  admins: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  ],
   rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
 });
 

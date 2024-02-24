@@ -1,34 +1,33 @@
 import { Router } from "express";
 import { check } from "express-validator";
-const room_router = Router();
+const roomRouter = Router();
 
 // Controller
 import roomController from "../controllers/roomController.js";
 
-//Middleware
+// Middleware
 import authMiddleware from "../middlewares/authMiddleware.js";
-// import instituteMiddleware from "../middlewares/instituteMiddleware.js";
+import instituteMiddleware from "../middlewares/instituteMiddleware.js";
 
-room_router.use(authMiddleware);
-
-/**
- * @route GET /api/v1/institute/rooms
- * @desc get all rooms
- * @access private
- */
-
-room_router.get("/", roomController.get_rooms);
+roomRouter.use(authMiddleware);
 
 /**
- * @route POST /api/v1/institute/create_room
- * @desc create room for institute
- * @access private
+ * @route GET /api/v1/rooms
+ * @desc Get all rooms
+ * @access Private
  */
+roomRouter.get("/", instituteMiddleware, roomController.get_rooms);
 
-room_router.post(
+/**
+ * @route POST /api/v1/institute/rooms
+ * @desc Create room for institute
+ * @access Private
+ */
+roomRouter.post(
   "/",
+  instituteMiddleware,
   [check("name", "Please enter a room name").not().isEmpty()],
   roomController.create_room
 );
 
-export default room_router;
+export default roomRouter;

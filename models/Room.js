@@ -28,7 +28,7 @@ const roomSchema = new mongoose.Schema({
   isAvailable: { type: Boolean, default: true },
   created_at: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 
