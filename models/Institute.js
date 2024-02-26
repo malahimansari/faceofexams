@@ -6,12 +6,12 @@ const institutionSchema = new mongoose.Schema({
   password: { type: String, required: true },
   logoUrl: { type: String },
   phone: { type: String, required: true },
-  category: {
-    type: String,
-    enum: ["university", "college", "school"],
-    required: true,
-    default: "school",
-  },
+  // category: {
+  //   type: String,
+  //   enum: ["university", "college", "school"],
+  //   required: true,
+  //   default: "school",
+  // },
   subscription: {
     status: {
       type: String,
@@ -20,15 +20,8 @@ const institutionSchema = new mongoose.Schema({
     },
     trialEndDate: { type: Date },
     pricing: { type: Number },
-    features: [{ type: String }],
   },
-  admins: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-  ],
+  payment: { type: mongoose.Schema.Types.ObjectId, ref: "Payment" },
   rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
 });
 

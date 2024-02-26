@@ -28,44 +28,79 @@ const create_room = async (req, res) => {
   const { name, teachers } = req.body;
 
   try {
-    const user = await User.findById(req.institute.user_id);
     const institute = await Institute.findById(req.institute.id);
 
-    if (!user || !institute) {
-      return res.status(404).json({ msg: "User or Institute not found" });
+    if (!institute) {
+      return res.status(404).json({ msg: "Institute not found" });
     }
-
-    // if (!institute.admins.includes(req.institute.user_id)) {
-    //   return res.status(403).json({ msg: "Unauthorized access" });
-    // }
 
     if (!name) {
       return res.status(400).json({ msg: "Name is required" });
     }
 
     if (!teachers || !Array.isArray(teachers) || teachers.length === 0) {
-      return res.status(400).json({ msg: "Teachers are required as a non-empty array" });
+      return res
+        .status(400)
+        .json({ msg: "Teachers are required as a non-empty array" });
     }
 
     // Check if the room name is unique for the institute
-    const existingRoom = await Room.findOne({ name, institute: req.institute.id });
+    const existingRoom = await Room.findOne({
+      name,
+      institute: req.institute.id,
+    });
+
     if (existingRoom) {
       return res.status(400).json({ msg: "Room with the same name already exists" });
     }
 
-    // Check if the provided teachers are valid users
-    // const invalidTeachers = teachers.filter((teacherId) => !user.teachers.includes(teacherId));
-    // if (invalidTeachers.length > 0) {
-    //   return res.status(400).json({ msg: "Invalid teacher IDs provided" });
-    // }
+    // Create a new room if it doesn't exist
+    const room = existingRoom || new Room({ name, institute: req.institute.id });
 
-    const room = new Room({
-      name,
-      teachers,
-      institute: req.institute.id,
-    });
+    // Find the users and update their roles to teacher
+    const teacherEmails = teachers.map((teacher) => teacher.user);
 
+    console.log("Teacher emails:", teacherEmails);
+
+    const updatedUsers = await Promise.all(
+      teacherEmails.map(async (email) => {
+        try {
+          const user = await User.findOneAndUpdate(
+            { email },
+            {
+              $push: {
+                role: {
+                  status: 1, // Assuming 1 represents the "teacher" role
+                  room_id: room._id,
+                },
+              },
+            },
+            { new: true }
+          );
+          return user;
+        } catch (error) {
+          console.error(`Failed to update user ${email}:`, error.message);
+          return null;
+        }
+      })
+    );
+
+    if(updatedUsers.some(user => user === null)) {
+      return res.status(500).json({ msg: "teacher don't exist" });
+    }
     await room.save();
+
+    console.log('Updated users:', updatedUsers);
+
+    // Get the updated user IDs
+    const updatedUserIds = updatedUsers
+      .filter((user) => user && user._id)
+      .map((user) => user._id);
+
+    // Create the room with the teachers' IDs
+    room.teachers = updatedUserIds.map((user) => ({ user }));
+    await room.save();
+
     return res.json({ msg: "Room created successfully", room });
   } catch (err) {
     console.error(err.message);
@@ -73,5 +108,7 @@ const create_room = async (req, res) => {
   }
 };
 
-
 export default { get_rooms, create_room };
+
+
+

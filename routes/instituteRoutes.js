@@ -5,12 +5,6 @@ const institute_router = Router();
 // Controllers
 import instituteController from "../controllers/instituteController.js";
 
-// Middleware
-import authMiddleware from "../middlewares/authMiddleware.js";
-
-
-institute_router.use(authMiddleware);
-
 /**
  * @route POST /api/v1/institute/register
  * @desc register in user

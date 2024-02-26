@@ -1,3 +1,8 @@
+// import swaggerUI from ('swagger-ui-express');
+// import YAML from ('yamljs');
+// const swaggerJsDocs = YAML.load("./api.yaml");
+
+
 import express from 'express';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
@@ -18,6 +23,8 @@ app.use("/api/v1/institute", instituteRoutes);
 app.use("/api/v1/room", roomRoutes);
 app.use("/api/v1/question", questionRoutes);
 // app.use("/api/v1/test", testRoutes);
+
+// app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
 
 const PORT = process.env.PORT || 8080;
 

@@ -6,10 +6,7 @@ const roomRouter = Router();
 import roomController from "../controllers/roomController.js";
 
 // Middleware
-import authMiddleware from "../middlewares/authMiddleware.js";
 import instituteMiddleware from "../middlewares/instituteMiddleware.js";
-
-roomRouter.use(authMiddleware);
 
 /**
  * @route GET /api/v1/rooms

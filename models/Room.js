@@ -11,11 +11,7 @@ const roomSchema = new mongoose.Schema({
   students: [
     {
       user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-      status: {
-        type: String,
-        enum: ["approved", "pending"],
-        default: "approved",
-      },
+      approved: { type: Boolean, default: true },
     },
   ],
   institute: { type: mongoose.Schema.Types.ObjectId, ref: "Institute" },

@@ -20,7 +20,6 @@ const register_institute = async (req, res) => {
       email,
       password,
       phone,
-      admin: req.user.id,
     });
     const salt = await bcrypt.genSalt(10);
     institute.password = await bcrypt.hash(password, salt);
@@ -30,7 +29,6 @@ const register_institute = async (req, res) => {
     const payload = {
       institute: {
         id: institute.id,
-        user_id: req.user.id,
       },
     };
     jwt.sign(
