@@ -88,6 +88,10 @@ const create_room = async (req, res) => {
     if(updatedUsers.some(user => user === null)) {
       return res.status(500).json({ msg: "teacher don't exist" });
     }
+
+    institute.rooms.push(room._id);
+    await institute.save();
+
     await room.save();
 
     console.log('Updated users:', updatedUsers);
