@@ -108,7 +108,100 @@ const create_room = async (req, res) => {
   }
 };
 
-export default { get_rooms, create_room };
+
+const addStudentRole = async (userId, roomId) => {
+  try {
+    const existingRole = await User.findOne({
+      _id: userId,
+      "role.status": 0,
+      "role.room_id": roomId,
+    });
+
+    if (existingRole) {
+      console.log(`Student role already exists for user ${userId} in room ${roomId}`);
+      return existingRole;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          role: {
+            status: 0,
+            room_id: roomId,
+          },
+        },
+      },
+      { new: true }
+    );
+
+    return updatedUser;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error adding student role to user");
+  }
+};
 
 
+// add student to room
+const addStudentToRoom = async (req, res) => {
+  const { room_id } = req.params;
+  const { students } = req.body;
 
+  try {
+    // Get the existing students in the room
+    const room = await Room.findById(room_id);
+    if (!room) {
+      return res.status(404).json({ msg: "Room not found" });
+    }
+
+    const existingStudentIds = room.students.map((student) => student.user.toString());
+
+    // Add students to the room
+    const studentsToAdd = await Promise.all(
+      students.map(async (student) => {
+        const user = await User.findOne({ email: student.email });
+
+        if (user) {
+          const userId = user._id.toString();
+
+          // Check if the user is already a teacher in the room
+          const isTeacherInRoom = room.teachers.some((teacher) => teacher.user.toString() === userId);
+
+          if (isTeacherInRoom) {
+            console.log(`User ${userId} is already a teacher in room ${room_id}`);
+            return null; // Skip adding as a student
+          }
+
+          // Check if the user is already a student in the room
+          if (existingStudentIds.includes(userId)) {
+            console.log(`User ${userId} is already a student in room ${room_id}`);
+            return null; // Skip adding again as a student
+          }
+
+          return addStudentRole(user._id, room_id);
+        }
+
+        return null;
+      })
+    );
+
+    const updatedStudents = studentsToAdd.filter((student) => student !== null);
+
+    if (updatedStudents.length > 0) {
+      // Update the students in the room
+      room.students.push(...updatedStudents.map((student) => ({ user: student._id })));
+      await room.save();
+
+      return res.json({ msg: "Students added successfully", updatedStudents });
+    }
+
+    return res.status(400).json({ msg: "Invalid student email(s)" });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ msg: "Server Error" });
+  }
+};
+
+
+export default { get_rooms, create_room, addStudentToRoom };

@@ -18,6 +18,6 @@ export default function (req, res, next) {
     next();
   } catch (error) {
     console.error(error.message);
-    res.status(401).json({ msg: "Authorization denied!" });
+    return res.status(401).json({ msg: "Authorization denied!" });
   }
 }

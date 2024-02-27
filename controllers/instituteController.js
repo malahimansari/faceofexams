@@ -48,4 +48,41 @@ const register_institute = async (req, res) => {
   }
 };
 
-export default { register_institute };
+const login_institute = async (req, res) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    return res.status(400).json({ msg: result.array() });
+  }
+  const { email, password } = req.body;
+  try {
+    const institute = await Institute.findOne({ email });
+    if (!institute) {
+      return res.status(400).json({ msg: "Institute not exists" });
+    }
+    const isMatch = await bcrypt.compare(password, institute.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid password" });
+    }
+    const payload = {
+      institute: {
+        id: institute.id,
+      },
+    };
+    jwt.sign(
+      payload,
+      process.env.JWTSECRET,
+      { expiresIn: 3600000 },
+      (err, token) => {
+        if (err) throw err;
+        return res.json({
+          token,
+        });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).json({ msg: "Server Error" });
+  }
+};
+
+export default { register_institute, login_institute };

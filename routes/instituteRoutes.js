@@ -28,5 +28,11 @@ institute_router.post(
   instituteController.register_institute
 );
 
+institute_router.post("/login", [
+  check("email", "Please enter your valid email").isEmail(),
+  check("password", "Please enter your valid password").exists(),
+],
+instituteController.login_institute
+);
 
 export default institute_router;

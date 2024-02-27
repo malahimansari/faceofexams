@@ -6,12 +6,6 @@ const institutionSchema = new mongoose.Schema({
   password: { type: String, required: true },
   logoUrl: { type: String },
   phone: { type: String, required: true },
-  // category: {
-  //   type: String,
-  //   enum: ["university", "college", "school"],
-  //   required: true,
-  //   default: "school",
-  // },
   subscription: {
     status: {
       type: String,
@@ -25,6 +19,6 @@ const institutionSchema = new mongoose.Schema({
   rooms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Room" }],
 });
 
-const Institution = mongoose.model("Institution", institutionSchema);
+const Institute = mongoose.model("Institution", institutionSchema);
 
-export default Institution;
+export default Institute;
