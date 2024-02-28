@@ -21,32 +21,23 @@ const createQuestion = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+  const { text, type, options, correctAnswer } = req.body;
   try {
-    const { text, options, correctAnswer } = req.body;
-
-    const instituteId = req.institute.id;
-
-    // Retrieve the first room associated with the institute
-    const room = await Room.findOne({ institute: instituteId });
-
-    if (!room) {
-      return res.status(404).json({ msg: "No rooms found for the institute" });
-    }
-
-    const question = new Question({
+    const newQuestion = new Question({
       text,
+      type,
       options,
       correctAnswer,
-      room,
-      institute: req.institute.id,
     });
 
-    await question.save();
-
-    res.json({ msg: "Question created successfully", question });
+    await newQuestion.save();
+    return res.json({
+      msg: "Question created successfully",
+      question: newQuestion,
+    });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ msg: "Server Error" });
+    return res.status(500).json({ msg: "Server Error" });
   }
 };
 

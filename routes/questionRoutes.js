@@ -5,10 +5,7 @@ import questionController from "../controllers/questionController.js";
 const router = express.Router();
 
 // Middleware
-import authMiddleware from "../middlewares/authMiddleware.js";
-import instituteMiddleware from "../middlewares/instituteMiddleware.js";
-
-router.use(authMiddleware);
+import roleMiddleware from "../middlewares/roleMiddleware.js";
 
 /**
  * @route GET /api/v1/questions/room/:roomId
@@ -17,7 +14,6 @@ router.use(authMiddleware);
  */
 router.get("/room/:roomId", questionController.getQuestionsForRoom);
 
-
 /**
  * @route POST /api/v1/questions
  * @desc Create a new question
@@ -25,13 +21,15 @@ router.get("/room/:roomId", questionController.getQuestionsForRoom);
  */
 router.post(
   "/",
-  instituteMiddleware,
+  roleMiddleware,
   [
-    check("text", "Please enter the question text").not().isEmpty(),
-    check("options", "Please provide options for the question").isArray({
-      min: 2,
-    }),
-    check("correctAnswer", "Please specify the correct answer").not().isEmpty(),
+    check("text", "Question text is required").not().isEmpty(),
+    check("type", "Invalid question type").isIn([
+      "single-choice",
+      "multi-choice",
+    ]),
+    check("options").isArray().optional(),
+    check("correctAnswer", "Correct answer is required").not().isEmpty(),
   ],
   questionController.createQuestion
 );
