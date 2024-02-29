@@ -16,25 +16,31 @@ const roleMiddleware = async (req, res, next) => {
 
     if (decoded.user) {
       const user = await User.findById(decoded.user.id); // Use decoded.user.id
-      console.log('User roles:', user.role);
+
+      if (!user) {
+        return res.status(403).json({ msg: "Unauthorized. User not found." });
+      }
 
       if (user && user.role && user.role.length > 0) {
-        console.log('User roles:', user.role);
-        console.log('req.params.room_id:', req.params.room_id);
+        const roomId = req.params.room_id;
 
-
+        if (!roomId) {
+          return res.status(400).json({ msg: "Room ID is required." });
+        }
+        
         const teacherRole = user.role.find(
-          (role) => role.status === 1 && String(role.room_id) === req.params.room_id
+          (role) =>
+            role.status === 1 && String(role.room_id) === req.params.room_id
         );
 
         console.log(teacherRole);
         if (teacherRole) {
-          console.log('Found teacher role:', teacherRole);
+          console.log("Found teacher role:", teacherRole);
 
           req.user = user;
           return next();
         } else {
-          console.log('No teacher role found');
+          console.log("No teacher role found");
 
           return res.status(403).json({
             msg: "Unauthorized. Only teachers can perform this action.",
