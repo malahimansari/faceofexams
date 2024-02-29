@@ -12,7 +12,7 @@ import roleMiddleware from "../middlewares/roleMiddleware.js";
  * @desc Get questions for a specific room
  * @access Public (accessible to students)
  */
-router.get("/room/:roomId", questionController.getQuestionsForRoom);
+router.get("/:room_id", questionController.getQuestionsForRoom);
 
 /**
  * @route POST /api/v1/questions
@@ -20,7 +20,7 @@ router.get("/room/:roomId", questionController.getQuestionsForRoom);
  * @access Private (for institute admins and teachers)
  */
 router.post(
-  "/",
+  "/:room_id",
   roleMiddleware,
   [
     check("text", "Question text is required").not().isEmpty(),
