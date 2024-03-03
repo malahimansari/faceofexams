@@ -58,9 +58,17 @@ const createExam = async (req, res) => {
     await User.updateMany(
       { _id: { $in: studentIds }, "role.room_id": room_id },
       {
-        $push: {
-          "role.$.exams": newExam._id,
+        $addToSet: {
+          "role.$[roleElem].exams": {
+            exam_id: newExam._id,
+            result: null, // Adjust this based on your structure
+          },
         },
+      },
+      {
+        arrayFilters: [
+          { "roleElem.room_id": room_id },
+        ],
       }
     );
 

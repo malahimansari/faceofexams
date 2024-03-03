@@ -28,8 +28,10 @@ const userSchema = new mongoose.Schema({
       },
       exams: [
         {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Exam",
+          exam_id: { type: mongoose.Schema.Types.ObjectId, ref: "Exam" },
+          result: { type: mongoose.Schema.Types.ObjectId, ref: "Result" },
+          attempts: { type: Number, default: 0 },
+          date: { type: Date, default: Date.now() }
         },
       ],
     },
