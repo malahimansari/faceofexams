@@ -11,6 +11,50 @@ import instituteController from "../controllers/instituteController.js";
  * @access public
  */
 
+
+
+
+/**
+ *  @swagger
+ * /api/v1/institute/register:
+ *   post:
+ *     summary: User login
+ *     tags: [Institute]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: User's password (at least 6 characters)
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             example:
+ *               token: <JWT_TOKEN>
+ *       400:
+ *         description: Bad request (validation errors)
+ *             
+ *       409:
+ *         description:  Bad request ( user not exists)
+ *         
+ *       500:
+ *         description: Internal server error
+ */
+
+
+
+
 institute_router.post(
   "/register",
   [
@@ -27,6 +71,51 @@ institute_router.post(
   ],
   instituteController.register_institute
 );
+
+
+
+
+/**
+ *  @swagger
+ * /api/v1/institute/login:
+ *   post:
+ *     summary: User login
+ *     tags: [Institute]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: User's password (at least 6 characters)
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             example:
+ *               token: <JWT_TOKEN>
+ *       400:
+ *         description: Bad request (validation errors)
+ *             
+ *       409:
+ *         description:  Bad request ( user not exists)
+ *         
+ *       500:
+ *         description: Internal server error
+ */
+
+
+
+
 
 institute_router.post("/login", [
   check("email", "Please enter your valid email").isEmail(),

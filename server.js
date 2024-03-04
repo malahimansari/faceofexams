@@ -1,6 +1,3 @@
-// import swaggerUI from ('swagger-ui-express');
-// import YAML from ('yamljs');
-// const swaggerJsDocs = YAML.load("./api.yaml");
 import express from 'express';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
@@ -11,6 +8,7 @@ import questionRoutes from './routes/questionRoutes.js';
 import examRoutes from './routes/examRoutes.js';
 // import testRoutes from './routes/testRoutes.js';
 import connectDB from './db/config.js';
+import swaggerSetup from './swagger.js';
 connectDB();
 dotenv.config();
 const app = express();
@@ -25,7 +23,9 @@ app.use("/api/v1/exam", examRoutes);
 // app.use("/api/v1/test", testRoutes);
 
 // app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDocs));
+// Swagger setup
+swaggerSetup(app);
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => console.log('Server is Running on', PORT));
+app.listen(PORT, () => console.log('Server is Running on', `http://localhost:${PORT}`));
