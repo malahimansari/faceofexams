@@ -1,11 +1,8 @@
 import { Router } from "express";
 import { check } from "express-validator";
-<<<<<<< HEAD
-const router = Router();
-=======
 const user_router = Router();
->>>>>>> d154fd95f4320f61086687d0caa1ecf88dc931bf
 import userController from "../controllers/userController.js";
+
 
 /**
  * @route POST /api/v1/users/register_user
@@ -13,20 +10,6 @@ import userController from "../controllers/userController.js";
  * @access public
  */
 
-<<<<<<< HEAD
-router.post(
-  "/register_user",
-  [
-    check("name", "Please enter your fullname").not().isEmpty(),
-    check("email", "Please enter a valid email address").isEmail(),
-    check(
-      "password",
-      "Please Enter a password with 6 or more characters"
-    ).isLength({ min: 6 }),
-  ],
-  userController.register_user
-);
-=======
 
 
 
@@ -41,7 +24,7 @@ router.post(
  * /api/v1/users/register_user:
  *   post:
  *     summary: User SignUp
- *     tags: [Login]
+ *     tags: [Register]
  *     requestBody:
  *       required: true
  *       content:
@@ -98,6 +81,9 @@ user_router.post(
         check("email", "Please enter a valid email address").isEmail(),
         check("password", "Please Enter a password with 6 or more characters").isLength({ min: 6 }),
     ], userController.register_user
->>>>>>> d154fd95f4320f61086687d0caa1ecf88dc931bf
 
-export default router;
+)
+
+
+
+export default user_router;

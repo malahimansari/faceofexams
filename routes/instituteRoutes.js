@@ -18,7 +18,7 @@ import instituteController from "../controllers/instituteController.js";
  *  @swagger
  * /api/v1/institute/register:
  *   post:
- *     summary: User login
+ *     summary: institute register
  *     tags: [Institute]
  *     requestBody:
  *       required: true
@@ -27,14 +27,22 @@ import instituteController from "../controllers/instituteController.js";
  *           schema:
  *             type: object
  *             properties:
+ *               name:
+ *                 type: string
+ *                 format: text
+ *                 description: Institute Name
  *               email:
  *                 type: string
  *                 format: email
- *                 description: User's email address
+ *                 description: enter a valid email address
  *               password:
  *                 type: string
  *                 format: password
- *                 description: User's password (at least 6 characters)
+ *                 description: password (at least 6 characters)
+ *               phone:
+ *                 type: string
+ *                 format: text
+ *                 description: enter a valid phone number
  *     responses:
  *       200:
  *         description: Successful login
@@ -79,7 +87,7 @@ institute_router.post(
  *  @swagger
  * /api/v1/institute/login:
  *   post:
- *     summary: User login
+ *     summary: institute login
  *     tags: [Institute]
  *     requestBody:
  *       required: true
@@ -121,7 +129,7 @@ institute_router.post("/login", [
   check("email", "Please enter your valid email").isEmail(),
   check("password", "Please enter your valid password").exists(),
 ],
-instituteController.login_institute
+  instituteController.login_institute
 );
 
 export default institute_router;
