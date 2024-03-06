@@ -33,21 +33,20 @@ FaceOfExams is a virtual exam platform that allows users to create, manage, and 
 2. Install Dependencies
 
   cd faceofexams
-  npm install   
+  npm install  
 
 3. Set up the environment variables:
 Create a .env file in the root directory and add the following:
 
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
-# Add other environment variables as needed
 
 4.  Run the application:
 npm start
 
 Usage
 Ensure MongoDB is running.
-Access the application at http://localhost:3000 (or another specified port).
+Access the application at http://localhost:8080 (or another specified port).
 Technologies Used
 Node.js
 Express
